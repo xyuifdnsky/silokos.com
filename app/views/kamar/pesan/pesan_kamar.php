@@ -3,23 +3,33 @@ require_once __DIR__ . '/../../../../config/database.php';
 $conn = DatabaseConfig::getConnection();
 session_start();
 
+// Pastikan ID ada
 if (!isset($_GET['id_kamar'])) {
-    die("ID kamar tidak ditemukan.");
+    die("ID kamar tidak ditemukan di URL.");
 }
 
 $id_kamar = $_GET['id_kamar'];
 
-// Ambil data kamar
-$kamar = $conn->query("
-    SELECT * FROM kamar WHERE id_kamar = '$id_kamar'
-")->fetch_assoc();
 
+// Query mengambil detail kamar berdasarkan ID
+$q = $conn->query("
+    SELECT 
+        kamar.id_kamar AS id,
+        kamar.nomor_kamar,
+        kamar.tipe_kamar,
+        kamar.harga,
+        users.nama_user AS pemilik
+    FROM kamar
+    LEFT JOIN users ON kamar.id_pemilik = users.id_user
+    WHERE kamar.id_kamar = '$id_kamar'
+");
+
+$kamar = $q->fetch_assoc();
 
 if (!$kamar) {
-    die("Kamar tidak ditemukan.");
+    die("Data kamar tidak ditemukan di database.");
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="id">
 <head>

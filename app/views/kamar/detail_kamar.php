@@ -139,10 +139,13 @@ $gambarList = explode(',', $data['gambar']);
         <div class="price-card">
             <p style="color:red; font-weight:bold;">⚡ Diskon 170rb <span style="text-decoration:line-through; color:#888;">Rp3.425.000</span></p>
             <p class="harga">Rp<?= number_format($data['harga'],0,',','.') ?> <span style="font-size:15px;">/ Bulan pertama</span></p>
-           <form action="pesan/pesan_kamar.php" method="GET">
-    <input type="hidden" name="id_kamar" value="<?= $km['id'] ?>">
-    <button class="btn btn-success w-100 mt-2">Pesan Kamar</button>
+        <form action="pesan/pesan_kamar.php" method="GET">
+    <input type="hidden" name="id_kamar" value="<?= $data['id_kamar'] ?>">
+    <button class="btn btn-success w-100 mt-2">
+        Pesan Kamar
+    </button>
 </form>
+
 
                 <button class="btn-chat">💬 Tanya Pemilik</button>
                 <button class="btn-sewa">Ajukan Sewa</button>
