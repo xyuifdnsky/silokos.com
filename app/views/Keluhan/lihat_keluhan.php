@@ -2,6 +2,8 @@
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 require_once __DIR__ . '/../../../config/database.php';
 
+$id_pemilik = $_GET['id_pemilik'] ?? $_SESSION['user']['id_pemilik'];
+
 $conn = DatabaseConfig::getConnection();
 if (!$conn) die("Koneksi database gagal!");
 

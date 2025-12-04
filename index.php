@@ -417,7 +417,6 @@
         </div>
     </section>
 
-
         <!-- POP UP Register -->
 <div id="roleOverlay" class="role-overlay">
     <div class="role-popup">
@@ -539,8 +538,6 @@ document.getElementById('closeUserBar').addEventListener('click', function() {
     document.getElementById('roleUserOverlayBar').style.display = 'none';
 });
 </script>
-
-
 
 
 </body>

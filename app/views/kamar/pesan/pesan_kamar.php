@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../../../config/database.php';
+require_once __DIR__ . '../../../../../config/database.php';
 $conn = DatabaseConfig::getConnection();
 session_start();
 
@@ -50,22 +50,15 @@ if (!$kamar) {
         <p><b>Tipe:</b> <?= ucfirst($kamar['tipe_kamar']) ?></p>
         <p><b>Harga per hari:</b> Rp<?= number_format($kamar['harga'], 0, ',', '.') ?></p>
 
-        <form action="proses_pesan_kamar.php" method="POST">
+      <form action="proses_pesan_kamar.php" method="POST">
+    <input type="hidden" name="id_kamar" value="<?= $kamar['id']; ?>">
 
-            <input type="hidden" name="id_kamar" value="<?= $id_kamar ?>">
+    tanggal mulai: <input type="date" name="tanggal_mulai" required>
+    tanggal selesai: <input type="date" name="tanggal_selesai" required>
 
-            <div class="mb-3">
-                <label class="form-label">Tanggal Mulai</label>
-                <input type="date" class="form-control" name="tanggal_mulai" required>
-            </div>
+    <button type="submit">Pesan</button>
+</form>
 
-            <div class="mb-3">
-                <label class="form-label">Tanggal Selesai</label>
-                <input type="date" class="form-control" name="tanggal_selesai" required>
-            </div>
-
-            <button class="btn btn-primary">Konfirmasi Pesanan</button>
-        </form>
 
     </div>
 

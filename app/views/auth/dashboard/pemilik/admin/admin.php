@@ -1,42 +1,43 @@
 <?php
 session_start();
-include __DIR__ . '../../../../../../models/database.php';
+include __DIR__ . '/../../../../../models/database.php';
 
 $conn = databaseconfig::getConnection();
 
-// Admin harus login
+// Cek login admin
 if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
     header("Location: ../../../login.php");
     exit;
 }
 
-$admin_id = $_SESSION['user']['id_user'];
+$id_admin = $_SESSION['user']['id_user'];
 
-// Ambil id pemilik yang meningkatkan admin
-$qAdmin = mysqli_query($conn, "SELECT id_pemilik FROM users WHERE id_user='$admin_id'");
+// Ambil id pemilik yang terkait admin
+$qAdmin = mysqli_query($conn, "SELECT id_pemilik FROM users WHERE id_user='$id_admin'");
 $adminData = mysqli_fetch_assoc($qAdmin);
-$id_pemilik = $adminData['id_pemilik']; // penting!!
+$id_pemilik = $adminData['id_pemilik'];
 
-// Hitung kamar milik pemilik terkait
+// Statistik Admin
 $qKamar = mysqli_query($conn, "SELECT COUNT(*) AS total FROM kamar WHERE id_pemilik='$id_pemilik'");
 $totalKamar = mysqli_fetch_assoc($qKamar)['total'] ?? 0;
 
-// Hitung penghuni
-$qPenghuni = mysqli_query($conn,
-    "SELECT COUNT(*) AS total FROM users WHERE id_pemilik='$id_pemilik'"
-);
+$qNotif = mysqli_query($conn, "
+    SELECT COUNT(*) AS total 
+    FROM sewa 
+    JOIN kamar ON sewa.id_kamar = kamar.id_kamar
+    WHERE sewa.status='pending' AND kamar.id_pemilik='$id_pemilik'
+");
+$totalNotif = mysqli_fetch_assoc($qNotif)['total'] ?? 0;
+
+$qPenghuni = mysqli_query($conn, "SELECT COUNT(*) AS total FROM users WHERE id_pemilik='$id_pemilik'");
 $totalPenghuni = mysqli_fetch_assoc($qPenghuni)['total'] ?? 0;
 
-// Hitung keluhan
-$qKeluhan = mysqli_query($conn,
-    "SELECT COUNT(*) AS total FROM keluhan WHERE id_pemilik='$id_pemilik'"
-);
+$qKeluhan = mysqli_query($conn, "SELECT COUNT(*) AS total FROM keluhan WHERE id_pemilik='$id_pemilik'");
 $totalKeluhan = mysqli_fetch_assoc($qKeluhan)['total'] ?? 0;
-
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
-    
 <head>
     <meta charset="UTF-8">
     <title>Dashboard Admin</title>
@@ -61,6 +62,7 @@ $totalKeluhan = mysqli_fetch_assoc($qKeluhan)['total'] ?? 0;
         .sidebar a {
             display: flex;
             align-items: center;
+            gap: 10px;
             padding: 12px 20px;
             font-size: 18px;
             color: black;
@@ -75,7 +77,7 @@ $totalKeluhan = mysqli_fetch_assoc($qKeluhan)['total'] ?? 0;
         .top-nav {
             position: fixed;
             top: 0;
-            left: 0px;
+            left: 250px;
             right: 0;
             height: 70px;
             background: #ffffff;
@@ -112,7 +114,7 @@ $totalKeluhan = mysqli_fetch_assoc($qKeluhan)['total'] ?? 0;
 <!-- SIDEBAR -->
 <div class="sidebar">
     <a href="#" class="active"><i class="bi bi-speedometer2"></i> Dashboard</a>
-    <a href="../../penyewa/data_penyewa.php?id_pemilik=<?= $id_pemilik ?>"><i class="bi bi-people"></i> Data Penghuni</a>
+    <a href="../../../../penyewa/data_sewa.php?id_pemilik=<?= $id_pemilik ?>"><i class="bi bi-people"></i> Data Penghuni</a>
     <a href="../../../../kamar/create.php?id_pemilik=<?= $id_pemilik ?>"><i class="bi bi-door-open"></i> Data Kamar</a>
     <a href="../../Keluhan/lihat_keluhan.php?id_pemilik=<?= $id_pemilik ?>"><i class="bi bi-chat-dots"></i> Keluhan</a>
     <a href="../../Pembayaran/transaksi.php?id_pemilik=<?= $id_pemilik ?>"><i class="bi bi-cash"></i> Transaksi</a>
@@ -122,18 +124,28 @@ $totalKeluhan = mysqli_fetch_assoc($qKeluhan)['total'] ?? 0;
 <!-- TOP NAV -->
 <nav class="top-nav">
     <h4 class="fw-bold">Dashboard Admin</h4>
-    
+
     <div class="d-flex align-items-center ms-auto">
-         <a href="../../../../keluhan/lihat_keluhan.php">
-       <i class="bi bi-bell fs-4 me-2"></i>
-    </a>
-      
+        
+        <!-- NOTIFIKASI -->
+        <div class="position-relative me-4">
+            <a href="../kamar/pesan/list_pemesanan.php?id_pemilik=<?= $id_pemilik ?>" class="text-dark">
+                <i class="bi bi-bell fs-4"></i>
+            </a>
+            <?php if ($totalNotif > 0): ?>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                <?= $totalNotif ?>
+            </span>
+            <?php endif; ?>
+        </div>
+
+        <!-- USER ICON -->
         <i class="bi bi-person-circle fs-4 me-2"></i>
         <span class="fw-semibold"><?= $_SESSION['user']['username'] ?></span>
     </div>
 </nav>
 
-<!-- CONTENT --> 
+<!-- CONTENT -->
 <div class="main-content">
 
     <h2 class="fw-bold mb-4">Ringkasan Data</h2>
@@ -160,7 +172,7 @@ $totalKeluhan = mysqli_fetch_assoc($qKeluhan)['total'] ?? 0;
             </div>
         </div>
     </div>
-
 </div>
+
 </body>
 </html>

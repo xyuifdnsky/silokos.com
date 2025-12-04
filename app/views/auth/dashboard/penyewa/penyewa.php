@@ -127,18 +127,6 @@ $list_kamar = $conn->query("
         <i class="bi bi-door-open"></i> Kamar Saya
     </a>
 
-    <a href="pembayaran.php">
-        <i class="bi bi-wallet2"></i> Pembayaran
-    </a>
-
-    <a href="riwayat.php">
-        <i class="bi bi-receipt"></i> Riwayat Pembayaran
-    </a>
-
-    <a href="../../../keluhan/create.php">
-        <i class="bi bi-exclamation-circle"></i> Keluhan
-    </a>
-
     <a href="../logout.php" style="color:red;">
         <i class="bi bi-box-arrow-right"></i> Logout
     </a>
@@ -224,6 +212,7 @@ $list_kamar = $conn->query("
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 
 </body>
 </html>

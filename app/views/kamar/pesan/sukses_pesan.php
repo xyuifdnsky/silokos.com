@@ -12,7 +12,7 @@
     <div class="card p-5 shadow">
         <h3>Pesanan Berhasil!</h3>
         <p>Pesanan kamar Anda sudah berhasil disimpan.</p>
-        <a href="index.php" class="btn btn-primary mt-3">Kembali ke daftar kamar</a>
+        <a href="../../auth/dashboard/penyewa/kamar_saya.php" class="btn btn-primary mt-3">Lihat Status Pesanan</a>
     </div>
 </div>
 

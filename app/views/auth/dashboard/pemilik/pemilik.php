@@ -10,23 +10,50 @@ if (!isset($_SESSION['user'])) {
     exit;
 }
 
-// Ambil data user dari session
-$user_id = $_SESSION['user']['id_user'];
+// Ambil data user
+$level = $_SESSION['user']['level'];
 $id_pemilik = $_SESSION['user']['id_user'];
 
-// Hitung kamar sesuai pemilik
-$query = "SELECT COUNT(*) AS total FROM kamar WHERE id_pemilik = '$id_pemilik'";
-$result = mysqli_query($conn, $query);
-$data = mysqli_fetch_assoc($result);
-$totalKamar = $data['total'] ?? 0;
+// Tentukan id_pemilik berdasarkan level user
+if ($level == 'pemilik') {
+    $id_pemilik = $user_id; // pemilik = dirinya sendiri
+} else if ($level == 'admin') {
+    $id_pemilik = $_SESSION['user']['id_pemilik']; // admin melihat milik pemilik
+}
 
-// Ambil data kamar pemilik
-$result = mysqli_query($conn, "SELECT * FROM kamar WHERE id_pemilik='$id_pemilik'");
+// ======================
+// HITUNG TOTAL KAMAR
+// ======================
+$qKamar = mysqli_query($conn, "SELECT COUNT(*) AS total FROM kamar WHERE id_pemilik='$id_pemilik'");
+$totalKamar = mysqli_fetch_assoc($qKamar)['total'] ?? 0;
+
+// ======================
+// HITUNG TOTAL PENGHUNI
+// ======================
+$qPenghuni = mysqli_query($conn, "
+    SELECT COUNT(*) AS total 
+    FROM sewa 
+    JOIN kamar ON sewa.id_kamar = kamar.id_kamar
+    WHERE kamar.id_pemilik = '$id_pemilik'
+      AND sewa.status = 'Disetujui'
+");
+$totalPenghuni = mysqli_fetch_assoc($qPenghuni)['total'] ?? 0;
+
+// ======================
+// HITUNG TOTAL KELUHAN
+// ======================
+$qKeluhan = mysqli_query($conn, "
+    SELECT COUNT(*) AS total 
+    FROM keluhan 
+    WHERE id_pemilik = '$id_pemilik'
+");
+$totalKeluhan = mysqli_fetch_assoc($qKeluhan)['total'] ?? 0;
 
 // Ambil detail user
-$qUser = mysqli_query($conn, "SELECT * FROM users WHERE id_user='$user_id'");
+$qUser = mysqli_query($conn, "SELECT * FROM users WHERE id_user='$id_pemilik'");
 $dataUser = mysqli_fetch_assoc($qUser);
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -131,7 +158,7 @@ $dataUser = mysqli_fetch_assoc($qUser);
 <!-- SIDEBAR -->
 <div class="sidebar">
     <a href="#" class="active"><i class="bi bi-speedometer2"></i> Dashboard</a>
-    <a href="../../penyewa/data_penyewa.php"><i class="bi bi-person"></i> Data Penghuni</a>
+    <a href="../../penyewa/data_sewa.php"><i class="bi bi-person"></i> Data Penghuni</a>
     <a href="../../../kamar/create.php"><i class="bi bi-door-open"></i> Tambah Kamar</a>
     <a href="../../../Keluhan/lihat_keluhan.php"><i class="bi bi-chat-dots"></i> Keluhan</a>
     <a href="../../../Pembayaran/transaksi.php"><i class="bi bi-credit-card"></i> Transaksi</a>
@@ -139,20 +166,12 @@ $dataUser = mysqli_fetch_assoc($qUser);
     <a href="../logout.php" style="color:red;"><i class="bi bi-box-arrow-right"></i> Logout</a>
 </div>
 
-        <!-- NAVBAR -->
-        <nav class="top-nav">
-            <div class="title">Dashboard Pemilik</div>
-            <div class="dropdown user-profile ms-auto">
-
-
-  <img src="../../kamar/gambar/<?= $km['gambar'] ?>" 
-                        class="card-img-top"
-                        style="height:170px; object-fit:cover;">
-
-   <img src="../../profil/<?= $foto ?>" 
-     class="rounded-circle" 
-     style="width:40px; height:40px; object-fit:cover;">
-
+<!-- NAVBAR -->
+<nav class="top-nav">
+    <div class="title">Dashboard Pemilik</div>
+    <div class="ms-auto dropdown">
+        <i class="bi bi-bell fs-4 me-2"></i>
+        <i class="bi bi-person-circle fs-4 me-2"></i>
 
         <a class="fw-semibold text-dark text-decoration-none dropdown-toggle"
            href="#" data-bs-toggle="dropdown">
@@ -186,7 +205,7 @@ $dataUser = mysqli_fetch_assoc($qUser);
         <!-- CARD PENGHUNI -->
         <div class="col-lg-4 col-md-6">
             <div class="card-stat">
-                <div class="stat-number">0</div>
+                <div class="stat-number"><?= $totalPenghuni ?></div>
                 <div class="fw-semibold mt-2">Penghuni</div>
             </div>
         </div>
@@ -194,7 +213,7 @@ $dataUser = mysqli_fetch_assoc($qUser);
         <!-- CARD KELUHAN -->
         <div class="col-lg-4 col-md-6">
             <div class="card-stat">
-                <div class="stat-number">0</div>
+                <div class="stat-number"><?= $totalKeluhan ?></div>
                 <div class="fw-semibold mt-2">Keluhan</div>
             </div>
         </div>
@@ -212,7 +231,6 @@ $dataUser = mysqli_fetch_assoc($qUser);
             </div>
         </div>
 
-        
         <div class="col-lg-6">
             <div class="chart-box text-center">
                 <h5 class="mb-3">Grafis Pemasukan</h5>

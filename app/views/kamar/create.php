@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $nomor     = $_POST['nomor_kamar'];
     $tipe      = $_POST['tipe_kamar'];
-    $jenis      = $_POST['jenis_kamar'];
+    $jenis     = $_POST['jenis_kamar'];
     $harga     = $_POST['harga'];
     $status    = $_POST['status'];
     $fasilitas = $_POST['fasilitas'];
@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
 
-   $stmt = $conn->prepare("
+$stmt = $conn->prepare("
     INSERT INTO kamar 
     (id_pemilik, nomor_kamar, tipe_kamar, jenis_kamar, harga, status, fasilitas, gambar, created_at, updated_at)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
@@ -60,15 +60,12 @@ $stmt->bind_param("isssssss",
     $gambar_name
 );
 
-
   if ($stmt->execute()) {
     header("Location: create.php?success=1");
     exit;
 }
-
     else $msg = "Gagal menambah kamar!";
 }
-
 
 // ================== SELECT KAMAR ==================
 if ($role == 'admin') {
@@ -82,15 +79,13 @@ if ($role == 'admin') {
 
 } elseif ($role == 'pemilik') {
 
-    $stmt = $conn->prepare("
-        SELECT kamar.*, users.nama_user AS pemilik 
+    $result = $conn->query("
+        SELECT kamar.*, users.nama_user AS pemilik
         FROM kamar 
         LEFT JOIN users ON kamar.id_pemilik = users.id_user
-        WHERE kamar.id_pemilik = ?
+        ORDER BY id_kamar DESC
     ");
-    $stmt->bind_param("i", $id_user);
-    $stmt->execute();
-    $result = $stmt->get_result();
+
 
 } else {
 
@@ -201,7 +196,7 @@ require_once '../templates/header.php';
 
                           <div class="mb-3">
                             <label class="form-label"><i class="fa-solid fa-house-user"></i> Jenis Kos</label>
-                           <select name="jenis_kamar" class="form-control" required> >
+                           <select name="jenis_kamar" class="form-control" required> 
                                 <option value="">-- Pilih --</option>
                                 <option value="putra">Putra</option>
     <option value="putri">Putri</option>
@@ -280,13 +275,16 @@ require_once '../templates/header.php';
                 <td><?= $no++ ?></td>
                 <td><?= $row['nomor_kamar'] ?></td>
                 <td><?= ucfirst($row['tipe_kamar']) ?></td>
-             <td><?= ucfirst($row['jenis_kamar'] ?? '-') ?></td>
+<td><?= !empty($row['jenis_kamar']) ? ucfirst($row['jenis_kamar']) : '-' ?></td>
+
+
 
                 <td>Rp <?= number_format($row['harga'], 0, ',', '.') ?></td>
 
                 <td>
                     <span class="badge <?= $row['status']=='tersedia'?'bg-success':'bg-danger' ?>">
-                        <?= ucfirst($row['status']) ?>
+                      <?= !empty($row['status']) ? ucfirst($row['status']) : '-' ?>
+
                     </span>
                 </td>
 
