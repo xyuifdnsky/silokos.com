@@ -479,12 +479,12 @@
         <div class="room-cards">
             <div class="room-card">
                 <h3>Kamar Tipe A</h3>
-                <p>Ukuran 3x3m, Kamar Mandi Dalam. Harga mulai dari **Rp 800.000/bulan**.</p>
+                <p>Ukuran 3x3m, Kamar Mandi Dalam. Harga mulai dari Rp 800.000/bulan.</p>
             </div>
             
             <div class="room-card" style="border-top: 5px solid #10B981;"> 
                 <h3>Kamar Tipe B</h3>
-                <p>Ukuran 3x4m, **AC** & Kamar Mandi Dalam. Harga mulai dari **Rp 1.200.000/bulan**.</p>
+                <p>Ukuran 3x4m, AC & Kamar Mandi Dalam. Harga mulai dari Rp 1.200.000/bulan.</p>
             </div>
             
         </div>
