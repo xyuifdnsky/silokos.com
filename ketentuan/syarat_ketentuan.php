@@ -135,7 +135,7 @@
                         
                         <div class="term-item">
                             <label class="term-label">1. Pendaftaran Akun</label>
-                            <p class="term-text">Pengguna wajib mengisi data dengan **benar dan lengkap** saat mendaftar akun. Akun yang digunakan haruslah akun pribadi, dan pengguna bertanggung jawab penuh atas segala aktivitas yang terjadi melalui akun tersebut.</p>
+                            <p class="term-text">Pengguna wajib mengisi data dengan benar dan lengkap saat mendaftar akun. Akun yang digunakan haruslah akun pribadi, dan pengguna bertanggung jawab penuh atas segala aktivitas yang terjadi melalui akun tersebut.</p>
                         </div>
                         
                         <div class="term-item">
@@ -155,7 +155,7 @@
                         
                         <div class="term-item">
                             <label class="term-label">5. Privasi Data</label>
-                            <p class="term-text">Kami berkomitmen menjaga **kerahasiaan data pribadi** pengguna sesuai dengan Kebijakan Privasi. Data hanya digunakan untuk keperluan layanan SiLoKos dan tidak akan disebarkan tanpa izin.</p>
+                            <p class="term-text">Kami berkomitmen menjaga kerahasiaan data pribadi pengguna sesuai dengan Kebijakan Privasi. Data hanya digunakan untuk keperluan layanan SiLoKos dan tidak akan disebarkan tanpa izin.</p>
                         </div>  
                         
                         <div class="term-item">
@@ -165,7 +165,7 @@
                         
                         <div class="term-item">
                             <label class="term-label">7. Kontak dan Dukungan</label>
-                            <p class="term-text">Untuk pertanyaan, keluhan, atau dukungan lebih lanjut, silakan hubungi layanan pelanggan kami melalui **[Alamat Email]** atau **[Nomor Telepon]**.</p>
+                            <p class="term-text">Untuk pertanyaan, keluhan, atau dukungan lebih lanjut, silakan hubungi layanan pelanggan kami melalui [Alamat Email] atau [Nomor Telepon].</p>
                         </div>
                         
                     </div>
@@ -174,7 +174,7 @@
                         <div class="form-check mb-4">
                             <input class="form-check-input" type="checkbox" value="" id="agreementCheck" disabled>
                             <label class="form-check-label" for="agreementCheck">
-                                Saya telah membaca, memahami, dan menyetujui semua **Syarat dan Ketentuan** di atas.
+                                Saya telah membaca, memahami, dan menyetujui semua Syarat dan Ketentuan di atas.
                             </label>
                         </div>
 
